@@ -4,7 +4,7 @@
 #include <IRremote.h>
 #include <EEPROM.h>
 
-// Device Info
+// Device Info n
 const char *deviceName = "ESP32 Controller";
 const char *roomName = "Living Room";
 
