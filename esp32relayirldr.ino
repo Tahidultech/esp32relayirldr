@@ -46,10 +46,10 @@ int lastLdrValue = 0;
 #define FAN_SPEED_ADDR 4
 
 // RainMaker devices
-static Switch sw1("Switch1", &RELAY1_PIN);
-static Switch sw2("Switch2", &RELAY2_PIN);
-static Switch light("Light", &RELAY3_PIN);
-static Fan fan("Fan", &RELAY4_PIN);
+static Switch sw1("Switch1", RELAY1_PIN);
+static Switch sw2("Switch2", RELAY2_PIN);
+static Switch light("Light", RELAY3_PIN);
+static Fan fan("Fan", RELAY4_PIN);
 static Device signalStatus("Status");
 
 // IR Receiver
@@ -135,15 +135,16 @@ void setupRainMaker() {
   
   // Add fan with speed control
   fan.addCb(writeFanCallback);
-  
+
   // Add parameter to fan for speed control (0-4)
-  Param fanSpeedParam("speed", "custom.param.speed", value(fanSpeed), PARAM_RANGE(0, 4, 1));
-  fan.addParam(fanSpeedParam);
-  fan.updateAndReportParam("speed", fanSpeed);
-  
-  // Add status device with parameters
-  Param roomLightParam("room_light", "custom.param.light", value("Unknown"), PARAM_TEXT);
-  Param signalLossParam("signal_loss", "custom.param.signalloss", value(0), PARAM_NUMBER);
+ Param fanSpeedParam("speed", "custom.param.speed", value(fanSpeed));
+ fan.addParam(fanSpeedParam);
+ fan.updateAndReportParam("speed", fanSpeed);
+
+// Add status device with parameters
+ Param roomLightParam("room_light", "custom.param.light", value("Unknown"));
+ Param signalLossParam("signal_loss", "custom.param.signalloss", value(0));
+
   
   signalStatus.addParam(roomLightParam);
   signalStatus.addParam(signalLossParam);
@@ -161,8 +162,11 @@ void setupRainMaker() {
   WiFi.onEvent(sysProvEvent);
   
   RMaker.start();
-  WiFiProv.beginProvision(WIFI_PROV_SCHEME_BLE, WIFI_PROV_SCHEME_HANDLER_FREE_BTDM, 
-                         WIFI_PROV_SECURITY_1, "RainMakerPassphrase", roomName);
+
+  WiFiProv.beginProvision(NETWORK_PROV_SCHEME_BLE, NETWORK_PROV_SCHEME_HANDLER_FREE_BTDM, 
+                        NETWORK_PROV_SECURITY_1, "RainMakerPassphrase", roomName);
+
+  
 }
 
 void setupGPIO() {
